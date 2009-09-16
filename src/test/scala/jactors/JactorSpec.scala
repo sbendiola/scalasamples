@@ -10,13 +10,12 @@ import org.jetlang.fibers.{FiberStub, ThreadFiber}
 
 class JactorSpec extends Spec with ShouldMatchers {
 	
+	sealed abstract class Msg
+  case class Add(i:Int) extends Msg
+  case class Subtract(i:Int) extends Msg
+        
   describe("A JetReactor") {
     it("can initialize it's callback") {
-
-      sealed abstract class Msg
-      case class Add(i:Int) extends Msg
-      case class Subtract(i:Int) extends Msg
-
       val fiber = new FiberStub
       fiber.start
       val channel = new Channel[Msg]
@@ -38,15 +37,12 @@ class JactorSpec extends Spec with ShouldMatchers {
     }
     
     it("can modify it's callback") {
-
-      sealed abstract class Msg
-      case class Add(i:Int) extends Msg
       case class Update(i:PartialFunction[Msg, Any]) extends Msg
       val fiber = new FiberStub
       fiber.start
-      val channel = new Channel[Msg]
-      
+      val channel = new Channel[Msg]      
       var value = 0
+      
       val actor = new JetReactor[Msg] {
         react {
           case Update(f) => react(f)
@@ -54,8 +50,7 @@ class JactorSpec extends Spec with ShouldMatchers {
         }
       }
       
-      channel(fiber) += actor
-      
+      channel(fiber) += actor      
       channel ! Update {
         case _ => value = 1000
       }
@@ -67,11 +62,10 @@ class JactorSpec extends Spec with ShouldMatchers {
     }
     
     it("can simulate state") {
-
-      sealed abstract class Msg
       case class First(i:Int) extends Msg
       case class Second(i:Int) extends Msg
       case object Totals extends Msg
+      
       val fiber = new FiberStub
       fiber.start
       val channel = new Channel[Msg]
