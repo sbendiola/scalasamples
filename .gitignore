@@ -1,0 +1,3 @@
+lib_managed
+*.class
+.DS_Store
