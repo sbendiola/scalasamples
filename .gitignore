@@ -1,3 +1,9 @@
 lib_managed
 *.class
 .DS_Store
+project/boot/**/*
+project/build/target/**/*
+
+
+
+
