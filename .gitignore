@@ -3,6 +3,7 @@ lib_managed
 .DS_Store
 project/boot/**/*
 project/build/target/**/*
+lib_managed/**/*
 
 
 
