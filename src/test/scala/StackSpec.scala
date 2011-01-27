@@ -21,4 +21,14 @@ class StackSpec extends Spec with ShouldMatchers {
       stack should be ('empty)
     }    
   }
+  
+  it("breakable") {
+    breakable {
+      
+      for (i <- 1 to 1000) {
+        if (i == 500) break
+      }
+      
+    }
+  }
 }
