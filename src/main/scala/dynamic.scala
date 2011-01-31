@@ -4,18 +4,18 @@ class ListAccessor(items: Iterable[Any]) extends Dynamic {
   def invokeDynamic(name: String)(args: Any*) = {
     val value = items.collect { case l:Iterable[_] =>  l.collect { case (n, v) if (n == name) => v } }.flatten.headOption
     println(Map("name" -> name, "args" -> args, "items" -> items, "result" -> value))
-    new JSONList(value)
+    new ListAccessor(value)
   }
   override def typed[T] = items.headOption.map(_.asInstanceOf[T]).get
-  override def toString = "JSONList(" + items.toString + ")"
+  override def toString = "ListAccessor(" + items.toString + ")"
 }
 
-object JsonListAccessor {
-  def apply(text: String): JSONList = 
+object ListAccessor {
+  def fromJson(text: String): ListAccessor = 
     new ListAccessor(JSON.parse(text))     
 }
 
-val json = JsonListAccessor("""{ "foo" : { "bar" : { "baz" : 23  }   }, "cuz" : "abc" }""")
+val json = ListAccessor.fromJson("""{ "foo" : { "bar" : { "baz" : 23  }   }, "cuz" : "abc" }""")
 val number = json.foo.bar.baz.typed[Double]
 val text = json.cuz.typed[String]
 require(number == 23d)
